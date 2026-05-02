@@ -3,10 +3,8 @@ package com.restassured.api.tests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.restassured.api.constants.Endpoints.PRODUCTS;
-import static com.restassured.api.constants.Endpoints.PRODUCT_BY_ID;
-import static com.restassured.api.specs.RequestSpecs.defaultRequestSpec;
-import static io.restassured.RestAssured.given;
+import static com.restassured.api.clients.ProductClient.getProductById;
+import static com.restassured.api.clients.ProductClient.getProducts;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
@@ -16,12 +14,7 @@ class ProductSmokeTest extends BaseApiTest {
     @Test
     @DisplayName("GET /products returns paginated products")
     void getProductsReturnsPaginatedProducts() {
-        given()
-                .spec(defaultRequestSpec())
-                .queryParam("limit", 10) // limit the number of products returned to 10
-                .queryParam("skip", 0) // start from the first product
-        .when()
-                .get(PRODUCTS)
+        getProducts(10, 0)
         .then()
                 .assertThat()
                 .statusCode(200)
@@ -36,11 +29,7 @@ class ProductSmokeTest extends BaseApiTest {
     @Test
     @DisplayName("GET /products/{id} returns product details")
     void getProductByIdReturnsSingleProduct() {
-        given()
-                .spec(defaultRequestSpec())
-                .pathParam("productId", 1)
-        .when()
-                .get(PRODUCT_BY_ID)
+        getProductById(1)
         .then()
                 .assertThat()
                 .statusCode(200)
