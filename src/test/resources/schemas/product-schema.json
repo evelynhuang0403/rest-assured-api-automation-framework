@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "description",
+    "category",
+    "price",
+    "discountPercentage",
+    "rating",
+    "stock",
+    "tags",
+    "brand",
+    "sku",
+    "weight",
+    "dimensions",
+    "warrantyInformation",
+    "shippingInformation",
+    "availabilityStatus",
+    "reviews",
+    "returnPolicy",
+    "minimumOrderQuantity",
+    "meta",
+    "images",
+    "thumbnail"
+  ],
+  "properties": {
+    "id": { "type": "integer" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "category": { "type": "string" },
+    "price": { "type": "number" },
+    "discountPercentage": { "type": "number" },
+    "rating": { "type": "number" },
+    "stock": { "type": "integer" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "brand": { "type": "string" },
+    "sku": { "type": "string" },
+    "weight": { "type": "integer" },
+    "dimensions": {
+      "type": "object",
+      "required": ["width", "height", "depth"],
+      "properties": {
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "depth": { "type": "number" }
+      }
+    },
+    "warrantyInformation": { "type": "string" },
+    "shippingInformation": { "type": "string" },
+    "availabilityStatus": { "type": "string" },
+    "reviews": { "type": "array" },
+    "returnPolicy": { "type": "string" },
+    "minimumOrderQuantity": { "type": "integer" },
+    "meta": { "type": "object" },
+    "images": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "thumbnail": { "type": "string" }
+  }
+}
