@@ -2,10 +2,9 @@ package com.restassured.api.clients;
 
 import io.restassured.response.Response;
 
-import static com.restassured.api.specs.RequestSpecs.defaultRequestSpec;
+import static com.restassured.api.constants.endpoints.ProductEndpoints.*;
+import static com.restassured.api.config.RequestSpecs.defaultRequestSpec;
 import static io.restassured.RestAssured.given;
-import static com.restassured.api.constants.Endpoints.PRODUCTS;
-import static com.restassured.api.constants.Endpoints.PRODUCT_BY_ID;
 
 public final class ProductClient {
     private ProductClient() {
@@ -28,5 +27,14 @@ public final class ProductClient {
                     .pathParam("productId", productId)
                 .when()
                     .get(PRODUCT_BY_ID);
+    }
+
+    public static Response searchProducts(String query){
+        return
+                given()
+                    .spec(defaultRequestSpec())
+                    .queryParam("q", query)
+                .when()
+                    .get(SEARCH_PRODUCTS);
     }
 }

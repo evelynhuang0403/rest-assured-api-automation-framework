@@ -1,0 +1,40 @@
+{
+  "cartByIdCases": [
+    {
+      "scenario": "EXISTING_CART",
+      "cartId": 1,
+      "expectedStatusCode": 200,
+      "expectedCartId": 1,
+      "expectedUserId": 33
+    },
+    {
+      "scenario": "NON_EXISTING_CART",
+      "cartId": 999999,
+      "expectedStatusCode": 404,
+      "expectedErrorMessage": "Cart with id '999999' not found"
+    }
+  ],
+
+  "cartsByUserCases": [
+    {
+      "scenario": "USER_WITH_CARTS",
+      "userId": 33,
+      "expectedStatusCode": 200,
+      "expectedUserId": 33
+    }
+  ],
+
+  "addCartCases": [
+    {
+      "scenario": "ADD_CART_WITH_MULTIPLE_PRODUCTS",
+      "userId": 1,
+      "products": [
+        { "id": 144, "quantity": 4 },
+        { "id": 98, "quantity": 1 }
+      ],
+      "expectedStatusCode": 201,
+      "expectedUserId": 1,
+      "expectedProductCount": 2
+    }
+  ]
+}

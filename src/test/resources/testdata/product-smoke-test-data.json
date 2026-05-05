@@ -1,0 +1,47 @@
+{
+  "getProductsTestData": [
+    {
+      "scenario": "GET_PRODUCTS_PAGINATED",
+      "limit": 10,
+      "skip": 0,
+      "expectedStatusCode": 200,
+      "expectedProductCount": 10
+    }
+  ],
+
+  "getProductByIdTestData": [
+    {
+      "scenario": "GET_PRODUCT_BY_ID_SUCCESS",
+      "productId": 1,
+      "expectedStatusCode": 200,
+      "expectedProductId": 1
+    },
+    {
+      "scenario": "GET_PRODUCT_BY_ID_NOT_FOUND",
+      "productId": 999999,
+      "expectedStatusCode": 404,
+      "expectedErrorMessage": "Product with id '999999' not found"
+    },
+    {
+      "scenario": "GET_PRODUCT_BY_ID_NOT_FOUND",
+      "productId": -1,
+      "expectedStatusCode": 404,
+      "expectedErrorMessage": "Product with id '-1' not found"
+    },
+    {
+      "scenario": "GET_PRODUCT_BY_ID_NOT_FOUND",
+      "productId": 0,
+      "expectedStatusCode": 404,
+      "expectedErrorMessage": "Product with id '0' not found"
+    }
+  ],
+
+  "searchProductsTestData": [
+    {
+      "scenario": "SEARCH_PRODUCTS",
+      "searchTerm": "phone",
+      "expectedStatusCode": 200,
+      "expectedMinimumProductCount": 1
+    }
+  ]
+}
