@@ -1,4 +1,4 @@
-package com.restassured.api.models.testData.product;
+package com.restassured.api.models.testdata.product;
 
 import java.util.List;
 
