@@ -1,21 +1,11 @@
 package com.restassured.api.models.testData.product;
 
-public class SearchProductsTestData {
-    private String scenario;
+public class ProductSearchTestData {
     private String searchTerm;
-    private int expectedStatusCode;
     private int expectedMinimumProductCount;
-
-    public String getScenario() {
-        return scenario;
-    }
 
     public String getSearchTerm() {
         return searchTerm;
-    }
-
-    public int getExpectedStatusCode() {
-        return expectedStatusCode;
     }
 
     public int getExpectedMinimumProductCount() {
@@ -24,6 +14,6 @@ public class SearchProductsTestData {
 
     @Override
     public String toString() {
-        return scenario.replace("_", " ").toLowerCase();
+        return "search='" + searchTerm + "'";
     }
 }

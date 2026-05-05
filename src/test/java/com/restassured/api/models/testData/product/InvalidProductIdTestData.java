@@ -1,26 +1,11 @@
 package com.restassured.api.models.testData.product;
 
-public class GetProductByIdTestData {
-    private String scenario;
+public class InvalidProductIdTestData {
     private int productId;
-    private int expectedStatusCode;
-    private int expectedProductId;
     private String expectedErrorMessage;
-
-    public String getScenario() {
-        return scenario;
-    }
 
     public int getProductId() {
         return productId;
-    }
-
-    public int getExpectedStatusCode() {
-        return expectedStatusCode;
-    }
-
-    public int getExpectedProductId() {
-        return expectedProductId;
     }
 
     public String getExpectedErrorMessage() {

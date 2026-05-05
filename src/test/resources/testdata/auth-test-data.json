@@ -1,0 +1,28 @@
+{
+  "invalidLoginCases": [
+    {
+      "description": "wrong password",
+      "username": "emilys",
+      "password": "wrong-password",
+      "expectedErrorMessage": "Invalid credentials"
+    },
+    {
+      "description": "unknown username",
+      "username": "no-such-user",
+      "password": "any-password",
+      "expectedErrorMessage": "Invalid credentials"
+    },
+    {
+      "description": "empty username",
+      "username": "",
+      "password": "emilyspass",
+      "expectedErrorMessage": "Username and password required"
+    },
+    {
+      "description": "empty password",
+      "username": "emilys",
+      "password": "",
+      "expectedErrorMessage": "Username and password required"
+    }
+  ]
+}
