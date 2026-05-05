@@ -1,8 +1,8 @@
 package com.restassured.api.tests;
 
-import com.restassured.api.models.testData.product.InvalidProductIdTestData;
-import com.restassured.api.models.testData.product.ProductSearchTestData;
-import com.restassured.api.models.testData.product.ProductTestData;
+import com.restassured.api.models.testdata.product.InvalidProductIdTestData;
+import com.restassured.api.models.testdata.product.ProductSearchTestData;
+import com.restassured.api.models.testdata.product.ProductTestData;
 import com.restassured.api.utils.JsonDataReader;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;

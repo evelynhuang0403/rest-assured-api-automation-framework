@@ -1,7 +1,7 @@
 package com.restassured.api.tests;
 
-import com.restassured.api.models.testData.auth.AuthTestData;
-import com.restassured.api.models.testData.auth.InvalidLoginTestData;
+import com.restassured.api.models.testdata.auth.AuthTestData;
+import com.restassured.api.models.testdata.auth.InvalidLoginTestData;
 import com.restassured.api.utils.JsonDataReader;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
