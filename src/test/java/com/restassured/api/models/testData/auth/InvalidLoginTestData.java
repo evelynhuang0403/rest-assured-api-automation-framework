@@ -1,4 +1,4 @@
-package com.restassured.api.models.testData.auth;
+package com.restassured.api.models.testdata.auth;
 
 public class InvalidLoginTestData {
     private String description;
