@@ -1,4 +1,4 @@
-package com.restassured.api.utils;
+package com.restassured.api.tests.assertions.product;
 
 import java.util.Map;
 

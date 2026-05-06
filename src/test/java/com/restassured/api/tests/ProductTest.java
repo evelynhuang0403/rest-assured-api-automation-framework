@@ -20,7 +20,7 @@ import static com.restassured.api.clients.ProductClient.searchProducts;
 import static com.restassured.api.constants.SchemaPaths.ERROR_SCHEMA;
 import static com.restassured.api.constants.SchemaPaths.PRODUCT_SCHEMA;
 import static com.restassured.api.constants.TestDataPaths.PRODUCT_TEST_DATA;
-import static com.restassured.api.utils.ProductSearchAssertions.isProductMatchingSearchTerm;
+import static com.restassured.api.tests.assertions.product.ProductSearchAssertions.isProductMatchingSearchTerm;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
