@@ -2,6 +2,8 @@ package com.restassured.api.tests;
 
 import com.restassured.api.models.request.cart.AddCartRequest;
 import com.restassured.api.models.request.cart.CartProductRequest;
+import com.restassured.api.models.request.cart.PatchCartRequest;
+import com.restassured.api.models.request.cart.UpdateCartRequest;
 import com.restassured.api.models.response.cart.Cart;
 import com.restassured.api.models.response.cart.CartList;
 import com.restassured.api.models.response.cart.CartProduct;
@@ -13,8 +15,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 
 import static com.restassured.api.clients.CartClient.addCart;
+import static com.restassured.api.clients.CartClient.deleteCart;
 import static com.restassured.api.clients.CartClient.getCart;
 import static com.restassured.api.clients.CartClient.getCartsByUser;
+import static com.restassured.api.clients.CartClient.patchCart;
+import static com.restassured.api.clients.CartClient.updateCart;
 import static com.restassured.api.constants.SchemaPaths.CART_SCHEMA;
 import static com.restassured.api.constants.SchemaPaths.ERROR_SCHEMA;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -25,6 +30,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -70,8 +76,8 @@ class CartTest extends BaseApiTest {
                 .extract()
                     .as(CartList.class);
 
-                assertThat(cartList.getCarts(), is(not(empty())));
-                assertThat(userIds(cartList), everyItem(equalTo(USER_WITH_CARTS_ID)));
+        assertThat(cartList.getCarts(), is(not(empty())));
+        assertThat(userIds(cartList), everyItem(equalTo(USER_WITH_CARTS_ID)));
     }
 
     @Test
@@ -93,9 +99,64 @@ class CartTest extends BaseApiTest {
         assertThat(created.getUserId(), equalTo(userId));
         assertThat(created.getProducts(), hasSize(2));
         assertThat(productIds(created), containsInAnyOrder(144, 98));
+        assertThat(created.getTotalQuantity(), equalTo(5));
         assertThat(created.getTotalProducts(), equalTo(2));
-        //assert total price is sum of total price of each product
         assertThat(created.getTotal(), equalTo(totalPrice(created)));
+    }
+
+    @Test
+    @DisplayName("PUT /carts/{id} with merge=true adds new products to the existing cart")
+    void putCartWithMergeTrueAddsProductsToExistingCart() {
+        Cart existing = getCart(KNOWN_CART_ID).then().statusCode(200).extract().as(Cart.class);
+        int newProductId = 1;
+        UpdateCartRequest request = new UpdateCartRequest(true, List.of(
+                new CartProductRequest(newProductId, 2)
+        ));
+
+        Cart updated = updateCart(KNOWN_CART_ID, request)
+                .then()
+                    .statusCode(200)
+                    .body(matchesJsonSchemaInClasspath(CART_SCHEMA))
+                .extract()
+                    .as(Cart.class);
+
+        assertThat(updated.getId(), equalTo(KNOWN_CART_ID));
+        assertThat(productIds(updated), hasItem(newProductId));
+        assertThat(updated.getTotalProducts(), equalTo(existing.getTotalProducts() + 1));
+        assertThat(quantityForProduct(updated, newProductId), equalTo(2));
+    }
+
+    @Test
+    @DisplayName("PATCH /carts/{id} replaces the cart's product list")
+    void patchCartReplacesProductList() {
+        int replacementProductId = 1;
+        PatchCartRequest request = new PatchCartRequest(List.of(
+                new CartProductRequest(replacementProductId, 5)
+        ));
+
+        Cart patched = patchCart(KNOWN_CART_ID, request)
+                .then()
+                    .statusCode(200)
+                    .body(matchesJsonSchemaInClasspath(CART_SCHEMA))
+                .extract()
+                    .as(Cart.class);
+
+        assertThat(patched.getId(), equalTo(KNOWN_CART_ID));
+        assertThat(patched.getProducts(), hasSize(1));
+        assertThat(productIds(patched), containsInAnyOrder(replacementProductId));
+        assertThat(patched.getTotalProducts(), equalTo(1));
+        assertThat(quantityForProduct(patched, replacementProductId), equalTo(5));
+        assertThat(patched.getTotalQuantity(), equalTo(5));
+    }
+
+    @Test
+    @DisplayName("DELETE /carts/{id} marks the cart as deleted")
+    void deleteCartMarksCartAsDeleted() {
+        deleteCart(KNOWN_CART_ID)
+                .then()
+                    .statusCode(200)
+                    .body("id", equalTo(KNOWN_CART_ID))
+                    .body("isDeleted", is(true));
     }
 
     // region Helper methods
@@ -113,8 +174,18 @@ class CartTest extends BaseApiTest {
                 .reduce(0F, Float::sum);
     }
 
+    private static int totalQuantity(Cart cart) {
+        return cart.getProducts().stream()
+                .mapToInt(CartProduct::getQuantity)
+                .sum();
+    }
+
+    private static int quantityForProduct(Cart cart, int productId) {
+        return cart.getProducts().stream()
+                .filter(product -> product.getId() == productId)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Product not found: " + productId))
+                .getQuantity();
+    }
     // endregion
-
-
 }
-
