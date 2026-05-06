@@ -1,4 +1,4 @@
-package com.restassured.api.models.request;
+package com.restassured.api.models.request.cart;
 
 import java.util.List;
 

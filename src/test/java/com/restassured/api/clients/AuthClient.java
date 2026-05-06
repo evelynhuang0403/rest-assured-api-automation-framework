@@ -1,6 +1,6 @@
 package com.restassured.api.clients;
 
-import com.restassured.api.models.request.LoginRequest;
+import com.restassured.api.models.request.auth.LoginRequest;
 import io.restassured.response.Response;
 
 import static com.restassured.api.constants.endpoints.AuthEndpoints.AUTH_LOGIN;
@@ -23,9 +23,9 @@ public final class AuthClient {
 
     public static Response getAuthenticatedUser(String accessToken) {
         return given()
-                .spec(defaultRequestSpec())
-                .header("Authorization", "Bearer " + accessToken)
-        .when()
+                    .spec(defaultRequestSpec())
+                    .header("Authorization", "Bearer " + accessToken)
+                .when()
                 .get(AUTH_ME);
     }
 }

@@ -90,7 +90,7 @@ class ProductTest extends BaseApiTest {
 
         List<Map<String, Object>> products = response.jsonPath().getList("products");
         assertTrue(
-                products.stream().allMatch(p -> isProductMatchingSearchTerm(p, testData.getSearchTerm())),
+                products.stream().allMatch(product -> isProductMatchingSearchTerm(product, testData.getSearchTerm())),
                 "Not every result matched search term '" + testData.getSearchTerm() + "'"
         );
     }

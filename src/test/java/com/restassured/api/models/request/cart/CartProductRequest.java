@@ -1,4 +1,4 @@
-package com.restassured.api.models.request;
+package com.restassured.api.models.request.cart;
 
 public class CartProductRequest {
     private final int id;

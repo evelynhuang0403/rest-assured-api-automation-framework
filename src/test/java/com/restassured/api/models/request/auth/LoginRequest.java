@@ -1,4 +1,4 @@
-package com.restassured.api.models.request;
+package com.restassured.api.models.request.auth;
 
 public class LoginRequest {
     private final String username;
