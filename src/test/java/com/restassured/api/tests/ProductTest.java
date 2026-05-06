@@ -1,25 +1,19 @@
 package com.restassured.api.tests;
 
-import com.restassured.api.models.testdata.product.InvalidProductIdTestData;
-import com.restassured.api.models.testdata.product.ProductSearchTestData;
-import com.restassured.api.models.testdata.product.ProductTestData;
-import com.restassured.api.utils.JsonDataReader;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static com.restassured.api.clients.ProductClient.getProductById;
 import static com.restassured.api.clients.ProductClient.getProducts;
 import static com.restassured.api.clients.ProductClient.searchProducts;
 import static com.restassured.api.constants.SchemaPaths.ERROR_SCHEMA;
 import static com.restassured.api.constants.SchemaPaths.PRODUCT_SCHEMA;
-import static com.restassured.api.constants.TestDataPaths.PRODUCT_TEST_DATA;
 import static com.restassured.api.tests.assertions.product.ProductSearchAssertions.isProductMatchingSearchTerm;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,18 +26,6 @@ class ProductTest extends BaseApiTest {
     private static final int PAGE_LIMIT = 10;
     private static final int PAGE_SKIP = 0;
     private static final int KNOWN_PRODUCT_ID = 1;
-
-    static ProductTestData productTestData() {
-        return JsonDataReader.readJsonObjectFromClasspath(PRODUCT_TEST_DATA, ProductTestData.class);
-    }
-
-    static Stream<InvalidProductIdTestData> invalidProductIdCases() {
-        return productTestData().getInvalidProductIdCases().stream();
-    }
-
-    static Stream<ProductSearchTestData> searchCases() {
-        return productTestData().getSearchCases().stream();
-    }
 
     @Test
     @DisplayName("GET /products returns a paginated, well-formed list")
@@ -69,29 +51,29 @@ class ProductTest extends BaseApiTest {
     }
 
     @ParameterizedTest(name = "GET /products/{0} returns 404 for invalid product id")
-    @MethodSource("invalidProductIdCases")
-    void getProductByIdReturnsNotFoundForInvalidIds(InvalidProductIdTestData testData) {
-        getProductById(testData.getProductId())
+    @ValueSource(ints = {0, -1, 999999})
+    void getProductByIdReturnsNotFoundForInvalidIds(int productId) {
+        getProductById(productId)
                 .then()
                 .statusCode(404)
                 .body(matchesJsonSchemaInClasspath(ERROR_SCHEMA))
-                .body("message", equalTo(testData.getExpectedErrorMessage()));
+                .body("message", equalTo("Product with id '" + productId + "' not found"));
     }
 
     @ParameterizedTest(name = "GET /products/search?q={0} returns products matching the term")
-    @MethodSource("searchCases")
-    void searchProductsReturnsMatchingResults(ProductSearchTestData testData) {
-        Response response = searchProducts(testData.getSearchTerm());
+    @ValueSource(strings = {"phone", "watch", "shirt"})
+    void searchProductsReturnsMatchingResults(String searchTerm) {
+        Response response = searchProducts(searchTerm);
 
         response.then()
                 .statusCode(200)
-                .body("products.size()", greaterThanOrEqualTo(testData.getExpectedMinimumProductCount()))
-                .body("total", greaterThanOrEqualTo(testData.getExpectedMinimumProductCount()));
+                .body("products.size()", greaterThan(0))
+                .body("total", greaterThan(0));
 
         List<Map<String, Object>> products = response.jsonPath().getList("products");
         assertTrue(
-                products.stream().allMatch(product -> isProductMatchingSearchTerm(product, testData.getSearchTerm())),
-                "Not every result matched search term '" + testData.getSearchTerm() + "'"
+                products.stream().allMatch(product -> isProductMatchingSearchTerm(product, searchTerm)),
+                "Not every result matched search term '" + searchTerm + "'"
         );
     }
 }
