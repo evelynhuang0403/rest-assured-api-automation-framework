@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "id",
+    "firstName",
+    "lastName",
+    "gender",
+    "email",
+    "username",
+    "image",
+    "role",
+    "hair",
+    "address",
+    "company",
+    "bank",
+    "crypto"
+  ],
+  "properties": {
+    "id": { "type": "integer" },
+    "firstName": { "type": "string" },
+    "lastName": { "type": "string" },
+    "gender": { "type": "string" },
+    "email": { "type": "string" },
+    "username": { "type": "string" },
+    "image": { "type": "string" },
+    "role": { "type": "string" },
+    "hair": {
+      "type": "object",
+      "required": [
+        "color",
+        "type"
+      ],
+      "properties": {
+        "color": { "type": "string" },
+        "type": { "type": "string" }
+      }
+    },
+    "address": {
+      "type": "object",
+      "required": [
+        "address",
+        "city",
+        "state",
+        "stateCode",
+        "postalCode",
+        "country"
+      ],
+      "properties": {
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "stateCode": { "type": "string" },
+        "postalCode": { "type": "string" },
+        "country": { "type": "string" }
+      }
+    },
+    "company": {
+      "type": "object",
+      "required": [
+        "department",
+        "name",
+        "title",
+        "address"
+      ],
+      "properties": {
+        "department": { "type": "string" },
+        "name": { "type": "string" },
+        "title": { "type": "string" },
+        "address": {
+          "type": "object",
+          "required": [
+            "address",
+            "city",
+            "state",
+            "stateCode",
+            "postalCode",
+            "country"
+          ],
+          "properties": {
+            "address": { "type": "string" },
+            "city": { "type": "string" },
+            "state": { "type": "string" },
+            "stateCode": { "type": "string" },
+            "postalCode": { "type": "string" },
+            "country": { "type": "string" }
+          }
+        }
+      }
+    },
+    "bank": {
+      "type": "object",
+      "required": [
+        "cardType",
+        "currency",
+        "iban"
+      ],
+      "properties": {
+        "cardType": { "type": "string" },
+        "currency": { "type": "string" },
+        "iban": { "type": "string" }
+      }
+    },
+    "crypto": {
+      "type": "object",
+      "required": [
+        "coin",
+        "wallet",
+        "network"
+      ],
+      "properties": {
+        "coin": { "type": "string" },
+        "wallet": { "type": "string" },
+        "network": { "type": "string" }
+      }
+    }
+  }
+}
