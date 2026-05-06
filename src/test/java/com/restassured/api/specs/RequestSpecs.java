@@ -1,0 +1,19 @@
+package com.restassured.api.specs;
+
+import com.restassured.utils.ConfigManager;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
+
+public final class RequestSpecs {
+    private RequestSpecs() {
+    }
+
+    public static RequestSpecification defaultRequestSpec() {
+        return new RequestSpecBuilder()
+                .setBaseUri(ConfigManager.baseUrl())
+                .setContentType(ContentType.JSON)
+                .setAccept(ContentType.JSON)
+                .build();
+    }
+}

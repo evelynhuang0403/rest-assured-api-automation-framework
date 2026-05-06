@@ -1,14 +1,14 @@
 package com.restassured.api.clients;
 
-import com.restassured.api.models.request.cart.AddCartRequest;
-import com.restassured.api.models.request.cart.PatchCartRequest;
-import com.restassured.api.models.request.cart.UpdateCartRequest;
+import com.restassured.models.request.cart.AddCartRequest;
+import com.restassured.models.request.cart.PatchCartRequest;
+import com.restassured.models.request.cart.UpdateCartRequest;
 import io.restassured.response.Response;
 
-import static com.restassured.api.constants.endpoints.CartEndpoints.ADD_CART;
-import static com.restassured.api.constants.endpoints.CartEndpoints.CARTS_BY_USER;
-import static com.restassured.api.constants.endpoints.CartEndpoints.CART_BY_ID;
-import static com.restassured.api.config.RequestSpecs.defaultRequestSpec;
+import static com.restassured.constants.endpoints.CartEndpoints.ADD_CART;
+import static com.restassured.constants.endpoints.CartEndpoints.CARTS_BY_USER;
+import static com.restassured.constants.endpoints.CartEndpoints.CART_BY_ID;
+import static com.restassured.api.specs.RequestSpecs.defaultRequestSpec;
 import static io.restassured.RestAssured.given;
 
 public final class CartClient {

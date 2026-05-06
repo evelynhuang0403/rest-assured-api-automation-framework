@@ -1,13 +1,13 @@
 package com.restassured.api.clients;
 
-import com.restassured.api.models.request.product.ProductRequest;
+import com.restassured.models.request.product.ProductRequest;
 import io.restassured.response.Response;
 
-import static com.restassured.api.config.RequestSpecs.defaultRequestSpec;
-import static com.restassured.api.constants.endpoints.ProductEndpoints.ADD_PRODUCT;
-import static com.restassured.api.constants.endpoints.ProductEndpoints.PRODUCTS;
-import static com.restassured.api.constants.endpoints.ProductEndpoints.PRODUCT_BY_ID;
-import static com.restassured.api.constants.endpoints.ProductEndpoints.SEARCH_PRODUCTS;
+import static com.restassured.api.specs.RequestSpecs.defaultRequestSpec;
+import static com.restassured.constants.endpoints.ProductEndpoints.ADD_PRODUCT;
+import static com.restassured.constants.endpoints.ProductEndpoints.PRODUCTS;
+import static com.restassured.constants.endpoints.ProductEndpoints.PRODUCT_BY_ID;
+import static com.restassured.constants.endpoints.ProductEndpoints.SEARCH_PRODUCTS;
 import static io.restassured.RestAssured.given;
 
 public final class ProductClient {

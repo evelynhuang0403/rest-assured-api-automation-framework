@@ -1,11 +1,11 @@
 package com.restassured.api.clients;
 
-import com.restassured.api.models.request.auth.LoginRequest;
+import com.restassured.models.request.auth.LoginRequest;
 import io.restassured.response.Response;
 
-import static com.restassured.api.constants.endpoints.AuthEndpoints.AUTH_LOGIN;
-import static com.restassured.api.constants.endpoints.AuthEndpoints.AUTH_ME;
-import static com.restassured.api.config.RequestSpecs.defaultRequestSpec;
+import static com.restassured.constants.endpoints.AuthEndpoints.AUTH_LOGIN;
+import static com.restassured.constants.endpoints.AuthEndpoints.AUTH_ME;
+import static com.restassured.api.specs.RequestSpecs.defaultRequestSpec;
 import static io.restassured.RestAssured.given;
 
 public final class AuthClient {
