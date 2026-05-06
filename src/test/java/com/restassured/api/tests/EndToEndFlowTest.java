@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import static com.restassured.api.clients.AuthClient.getAuthenticatedUser;
 import static com.restassured.api.clients.AuthClient.login;
 import static com.restassured.api.clients.CartClient.getCartsByUser;
-import static com.restassured.api.fixtures.TestUsers.VALID_PASSWORD;
-import static com.restassured.api.fixtures.TestUsers.VALID_USERNAME;
+import static com.restassured.api.config.ConfigManager.loginPassword;
+import static com.restassured.api.config.ConfigManager.loginUsername;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
 
@@ -18,7 +18,7 @@ class EndToEndFlowTest extends BaseApiTest {
     @Test
     @DisplayName("Login -> /auth/me -> /carts/user/{userId} returns carts owned by the logged-in user")
     void loggedInUserCanFetchTheirOwnCarts() {
-        JsonPath loginBody = login(VALID_USERNAME, VALID_PASSWORD)
+        JsonPath loginBody = login(loginUsername(), loginPassword())
                 .then()
                 .statusCode(200)
                 .extract()
@@ -31,7 +31,7 @@ class EndToEndFlowTest extends BaseApiTest {
         profile.then()
                 .statusCode(200)
                 .body("id", equalTo(userIdFromLogin))
-                .body("username", equalTo(VALID_USERNAME));
+                .body("username", equalTo(loginUsername()));
 
         getCartsByUser(userIdFromLogin)
                 .then()

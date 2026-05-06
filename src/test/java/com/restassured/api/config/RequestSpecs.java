@@ -10,7 +10,7 @@ public final class RequestSpecs {
 
     public static RequestSpecification defaultRequestSpec() {
         return new RequestSpecBuilder()
-                .setBaseUri(ApiConfig.baseUrl())
+                .setBaseUri(ConfigManager.baseUrl())
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.JSON)
                 .build();
