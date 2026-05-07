@@ -3,10 +3,16 @@ package com.restassured.tests;
 import com.restassured.models.response.auth.AuthenticatedUser;
 import com.restassured.models.testdata.auth.AuthTestData;
 import com.restassured.models.testdata.auth.InvalidLoginTestData;
-import com.restassured.utils.JsonDataReader;
 import com.restassured.utils.ConfigManager;
+import com.restassured.utils.JsonDataReader;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
+import io.qameta.allure.Severity;
+import io.qameta.allure.Story;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,7 +31,15 @@ import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static io.qameta.allure.SeverityLevel.CRITICAL;
+import static io.qameta.allure.SeverityLevel.NORMAL;
+import static io.qameta.allure.SeverityLevel.MINOR;
 
+@Epic("REST Assured API Automation Framework")
+@Feature("Authentication")
+@Owner("Evelyn Wong")
+@Tag("api")
+@Tag("auth")
 class AuthTest extends BaseApiTest {
 
     static Stream<InvalidLoginTestData> invalidLoginCases() {
@@ -35,6 +49,8 @@ class AuthTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Valid login")
+    @Severity(CRITICAL)
     @DisplayName("POST /auth/login returns a token and profile matching the login schema")
     void loginWithValidCredentialsReturnsToken() {
         login(ConfigManager.loginUsername(), ConfigManager.loginPassword())
@@ -46,6 +62,8 @@ class AuthTest extends BaseApiTest {
     }
 
     @ParameterizedTest(name = "POST /auth/login returns 400 - {0}")
+    @Story("Invalid login validation")
+    @Severity(MINOR)
     @MethodSource("invalidLoginCases")
     void loginWithInvalidCredentialsReturns400(InvalidLoginTestData testData) {
         login(testData.getUsername(), testData.getPassword())
@@ -56,6 +74,8 @@ class AuthTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Get authenticated user profile")
+    @Severity(CRITICAL)
     @DisplayName("GET /auth/me returns the profile of the authenticated user")
     void getAuthenticatedUserReturnsProfile() {
         JsonPath loginBody = login(ConfigManager.loginUsername(), ConfigManager.loginPassword())

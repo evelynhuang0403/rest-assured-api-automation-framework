@@ -4,7 +4,13 @@ import com.restassured.models.request.product.ProductRequest;
 import com.restassured.models.response.product.Product;
 import com.restassured.models.response.product.ProductList;
 import com.restassured.tests.assertions.product.ProductAssertions;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
+import io.qameta.allure.Severity;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -18,9 +24,16 @@ import static com.restassured.api.clients.ProductClient.searchProducts;
 import static com.restassured.api.clients.ProductClient.updateProduct;
 import static com.restassured.constants.SchemaPaths.ERROR_SCHEMA;
 import static com.restassured.constants.SchemaPaths.PRODUCT_SCHEMA;
+import static io.qameta.allure.SeverityLevel.MINOR;
+import static io.qameta.allure.SeverityLevel.NORMAL;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 
+@Epic("REST Assured API Automation Framework")
+@Feature("Products")
+@Owner("Evelyn Wong")
+@Tag("api")
+@Tag("products")
 class ProductTest extends BaseApiTest {
 
     private static final int PAGE_LIMIT = 10;
@@ -31,6 +44,8 @@ class ProductTest extends BaseApiTest {
     private static final int PRODUCT_TO_DELETE_ID = 1;
 
     @Test
+    @Story("Product pagination")
+    @Severity(NORMAL)
     @DisplayName("GET /products returns a paginated, well-formed list")
     void getProductsReturnsPaginatedResponse() {
         ProductList productList = getProducts(PAGE_LIMIT, PAGE_SKIP)
@@ -44,6 +59,8 @@ class ProductTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Product schema validation")
+    @Severity(NORMAL)
     @DisplayName("GET /products/{id} returns a product conforming to the product schema")
     void getProductByIdReturnsProductMatchingSchema() {
         Product product = getProductById(KNOWN_PRODUCT_ID)
@@ -58,6 +75,8 @@ class ProductTest extends BaseApiTest {
     }
 
     @ParameterizedTest(name = "GET /products/{0} returns 404 for invalid product id")
+    @Story("Invalid product id validation")
+    @Severity(MINOR)
     @ValueSource(ints = {0, -1, 999999})
     void getProductByIdReturnsNotFoundForInvalidIds(int productId) {
         getProductById(productId)
@@ -68,6 +87,8 @@ class ProductTest extends BaseApiTest {
     }
 
     @ParameterizedTest(name = "GET /products/search?q={0} returns products matching the term")
+    @Story("Product search relevance")
+    @Severity(NORMAL)
     @ValueSource(strings = {"phone", "watch", "shirt"})
     void searchProductsReturnsMatchingResults(String searchTerm) {
         ProductList productList = searchProducts(searchTerm)
@@ -81,6 +102,8 @@ class ProductTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Product creation")
+    @Severity(NORMAL)
     @DisplayName("POST /products/add creates a product with the requested fields")
     void addProductCreatesProductWithRequestedFields() {
         String title = "Portfolio API Testing Backpack";
@@ -104,6 +127,8 @@ class ProductTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Product full update")
+    @Severity(NORMAL)
     @DisplayName("PUT /products/{id} updates a product with a complete request body")
     void putProductUpdatesProductWithCompleteRequestBody() {
         String updatedTitle = "Updated API Testing Backpack";
@@ -127,6 +152,8 @@ class ProductTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Product partial update")
+    @Severity(NORMAL)
     @DisplayName("PATCH /products/{id} partially updates a product and preserves omitted fields")
     void patchProductPartiallyUpdatesProductAndPreservesOmittedFields() {
         Product original = getProductById(PRODUCT_TO_PATCH_ID)
@@ -160,6 +187,8 @@ class ProductTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Product deletion")
+    @Severity(NORMAL)
     @DisplayName("DELETE /products/{id} marks the product as deleted")
     void deleteProductMarksProductAsDeleted() {
         deleteProduct(PRODUCT_TO_DELETE_ID)

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Assertion failure",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*AssertionError.*"
+  },
+  {
+    "name": "Schema validation failure",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*JsonSchemaValidationException.*|.*schema.*"
+  },
+  {
+    "name": "API connectivity issue",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*UnknownHostException.*|.*ConnectException.*|.*SocketTimeoutException.*"
+  },
+  {
+    "name": "Unexpected test error",
+    "matchedStatuses": ["broken"]
+  }
+]

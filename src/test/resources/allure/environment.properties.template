@@ -1,0 +1,6 @@
+API\ Base\ URL=${api.baseUrl}
+API\ Target=DummyJSON
+Java\ Version=${java.version}
+Test\ Framework=JUnit 5
+HTTP\ Client=REST Assured
+Report\ Type=Local Allure API automation report

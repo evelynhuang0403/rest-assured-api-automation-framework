@@ -1,4 +1,6 @@
 target/
+.allure/
+reports/
 .idea/
 *.iml
 .DS_Store

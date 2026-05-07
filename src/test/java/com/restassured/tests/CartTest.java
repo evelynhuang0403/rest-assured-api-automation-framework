@@ -7,7 +7,13 @@ import com.restassured.models.request.cart.UpdateCartRequest;
 import com.restassured.models.response.cart.Cart;
 import com.restassured.models.response.cart.CartList;
 import com.restassured.api.clients.CartClient;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
+import io.qameta.allure.Severity;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,17 +31,26 @@ import static com.restassured.tests.assertions.cart.CartAssertions.assertCartTot
 import static com.restassured.tests.assertions.cart.CartAssertions.assertEveryCartBelongsToUser;
 import static com.restassured.tests.assertions.cart.CartAssertions.assertProductLineQuantityIs;
 import static com.restassured.tests.assertions.cart.CartAssertions.assertValidCartSummary;
+import static io.qameta.allure.SeverityLevel.MINOR;
+import static io.qameta.allure.SeverityLevel.NORMAL;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+@Epic("REST Assured API Automation Framework")
+@Feature("Carts")
+@Owner("Evelyn Wong")
+@Tag("api")
+@Tag("carts")
 class CartTest extends BaseApiTest {
 
     private static final int KNOWN_CART_ID = 1;
     private static final int USER_WITH_CARTS_ID = 33;
 
     @Test
+    @Story("Cart schema validation")
+    @Severity(NORMAL)
     @DisplayName("GET /carts/{id} returns a well-formed cart")
     void existingCartIsWellFormed() {
         Cart cart = CartClient.getCart(KNOWN_CART_ID)
@@ -50,6 +65,8 @@ class CartTest extends BaseApiTest {
     }
 
     @ParameterizedTest(name = "GET /carts/{0} returns 404 for invalid cart id")
+    @Story("Invalid cart id validation")
+    @Severity(MINOR)
     @ValueSource(ints = {0, 999999, 1000000})
     void invalidCartIdReturns404(int invalidId) {
         CartClient.getCart(invalidId)
@@ -60,6 +77,8 @@ class CartTest extends BaseApiTest {
     }
 
     @Test
+    @Story("User cart lookup")
+    @Severity(NORMAL)
     @DisplayName("GET /carts/user/{userId} returns only that user's carts")
     void cartsByUserContainsOnlyThatUsersCarts() {
         CartList cartList = CartClient.getCartsByUser(USER_WITH_CARTS_ID)
@@ -72,6 +91,8 @@ class CartTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Cart creation")
+    @Severity(NORMAL)
     @DisplayName("POST /carts/add creates a cart with the requested products")
     void addCartCreatesCartWithRequestedProducts() {
         int userId = 1;
@@ -95,6 +116,8 @@ class CartTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Cart full update")
+    @Severity(NORMAL)
     @DisplayName("PUT /carts/{id} with merge=true adds new products to the existing cart")
     void putCartWithMergeTrueAddsProductsToExistingCart() {
         Cart existing = CartClient.getCart(KNOWN_CART_ID).then().statusCode(200).extract().as(Cart.class);
@@ -118,6 +141,8 @@ class CartTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Cart partial update")
+    @Severity(NORMAL)
     @DisplayName("PATCH /carts/{id} replaces the cart's product list")
     void patchCartReplacesProductList() {
         int replacementProductId = 1;
@@ -141,6 +166,8 @@ class CartTest extends BaseApiTest {
     }
 
     @Test
+    @Story("Cart deletion")
+    @Severity(NORMAL)
     @DisplayName("DELETE /carts/{id} marks the cart as deleted")
     void deleteCartMarksCartAsDeleted() {
         CartClient.deleteCart(KNOWN_CART_ID)

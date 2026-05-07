@@ -2,6 +2,7 @@ package com.restassured.tests;
 
 import com.restassured.api.specs.ResponseSpecs;
 import com.restassured.utils.TestExecutionLogger;
+import com.restassured.utils.reporting.AllureEnvironmentWriter;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,5 +14,6 @@ public abstract class BaseApiTest {
     static void configureRestAssured() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.responseSpecification = ResponseSpecs.defaultResponseSpec();
+        AllureEnvironmentWriter.writeEnvironmentProperties();
     }
 }

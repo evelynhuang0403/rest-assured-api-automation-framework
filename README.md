@@ -14,9 +14,9 @@ The framework targets [DummyJSON](https://dummyjson.com/docs), a public API with
 - JSON-driven negative login scenarios
 - Positive and negative API validation
 - Authentication token flow through `/auth/login` and `/auth/me`
-- End-to-end API flow from login to authenticated user cart lookup
 - JSON schema validation for product, cart, auth, and error contracts
 - Logback-backed request, response, and test execution logging
+- Allure reporting with domain labels, severity, execution metadata, and redacted HTTP evidence
 
 ## Test Coverage
 
@@ -44,13 +44,6 @@ The framework targets [DummyJSON](https://dummyjson.com/docs), a public API with
 - Cart create, update, patch, and delete flows
 - Cart schema validation
 
-### End-to-End Flow
-
-- Login as a configured user
-- Extract access token
-- Fetch authenticated profile through `/auth/me`
-- Use the authenticated user ID to validate the user's carts
-
 ## Project Structure
 
 ```text
@@ -63,11 +56,12 @@ src/test/java/com/restassured
 │   ├── request/          Request POJOs for non-trivial payloads
 │   ├── response/         Response POJOs used by assertions and flows
 │   └── testdata/         POJOs for external JSON test data
-├── tests/                JUnit 5 API and end-to-end test classes
+├── tests/                JUnit 5 API test classes
 │   └── assertions/       Domain-specific assertion helpers
 └── utils/                Config, JSON data reading, properties, and logging
 
 src/test/resources
+├── allure/               Allure environment and category metadata templates
 ├── schemas/              JSON schema contracts
 ├── testdata/             External JSON test data
 ├── logback-test.xml      Test logging configuration
@@ -87,11 +81,44 @@ src/test/resources
 ## Run Tests
 
 ```bash
-mvn test
+mvn clean test
 ```
 
 The test suite runs against the live DummyJSON API, so an internet connection is required.
 
+## Allure Reporting
+
+Run the full suite and create raw Allure result files:
+
+```bash
+mvn clean test
+```
+
+Generate the static HTML report:
+
+```bash
+mvn allure:report
+```
+
+Open the generated report:
+
+```bash
+open reports/allure-report/index.html
+```
+
+You can also start a temporary local report server:
+
+```bash
+mvn allure:serve
+```
+
+Allure output locations:
+
+- Raw result files: `target/allure-results`
+- Static HTML report: `reports/allure-report`
+
+The Allure report groups tests by API domain, story, severity, and tags. It also includes local execution metadata and redacted HTTP request/response evidence so failures can be investigated without exposing credentials, bearer tokens, or cookies.
+
 ## Current Status
 
-The current MVP includes Products, Auth, Carts, and an end-to-end authenticated flow. The next planned portfolio enhancements are Allure reporting, GitHub Actions CI, and AI-assisted failure triage.
+The current MVP includes Products, Auth, Carts, and enterprise-style Allure reporting. The next planned portfolio enhancements are GitHub Actions CI and AI-assisted failure triage.
