@@ -1,0 +1,36 @@
+Status: 201
+Response time: 57 ms
+
+Headers:
+CF-RAY: 9f852846ed11c365-ORD
+Connection: keep-alive
+Content-Length: 203
+Content-Type: application/json; charset=utf-8
+Date: Fri, 08 May 2026 02:50:30 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=vixgwjad8QvvG%2FGxKl9AWlAfOVyr3fuj2HI%2F8S9v7RQszdYJbw2eYhXc2RsvB0uS%2B0yNJ9T8NiF%2F6OWVP8EKJUqK129j%2BBangxG8cv4xDnNV4weyPxpeFhwiJk9mR8Ze"}]}
+Server: cloudflare
+access-control-allow-credentials: true
+cf-cache-status: DYNAMIC
+etag: W/"cb-CMfabu5ewd5NyT86ZmwZBE4De0o"
+strict-transport-security: max-age=15552000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 94
+x-ratelimit-reset: 1778208633
+x-xss-protection: 1; mode=block
+
+Body:
+{
+    "id": 195,
+    "title": "Portfolio API Testing Backpack",
+    "price": 79.99,
+    "stock": 25,
+    "description": "A durable backpack used to demonstrate product creation assertions.",
+    "brand": "QA Gear",
+    "category": "accessories"
+}

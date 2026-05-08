@@ -1,0 +1,30 @@
+Status: 400
+Response time: 76 ms
+
+Headers:
+CF-RAY: 9f85284188a3634a-ORD
+Connection: keep-alive
+Content-Length: 44
+Content-Type: application/json; charset=utf-8
+Date: Fri, 08 May 2026 02:50:30 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=0oAfhjpvrNo%2BqeMvnRt%2FLFtk1LXmMo7qaKQHBc2G1yXMFRmTjOO04xkR4etD3FbCNP4a7mh79YyJSOe0xbNTskgB6uHS3O3FyL5hTIaJzm%2BjBll9LpkBV4HOYaYs8sZ%2B"}]}
+Server: cloudflare
+access-control-allow-credentials: true
+cf-cache-status: DYNAMIC
+etag: W/"2c-JAq5V8MKfWmWXvKJFTg6rvXRjdU"
+strict-transport-security: max-age=15552000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 98
+x-ratelimit-reset: 1778208633
+x-xss-protection: 1; mode=block
+
+Body:
+{
+    "message": "Username and password required"
+}
