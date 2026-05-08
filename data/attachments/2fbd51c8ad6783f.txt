@@ -1,0 +1,12 @@
+GET https://dummyjson.com/products?limit=10&skip=0
+
+Query parameters:
+limit: 10
+skip: 0
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Content-Type: application/json
+
+Body:
+(none)

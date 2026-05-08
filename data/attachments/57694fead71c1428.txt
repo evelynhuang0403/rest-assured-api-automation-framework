@@ -1,0 +1,11 @@
+GET https://dummyjson.com/carts/999999
+
+Query parameters:
+(none)
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Content-Type: application/json
+
+Body:
+(none)

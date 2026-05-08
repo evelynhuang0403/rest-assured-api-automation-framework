@@ -1,0 +1,11 @@
+GET https://dummyjson.com/products/search?q=shirt
+
+Query parameters:
+q: shirt
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Content-Type: application/json
+
+Body:
+(none)

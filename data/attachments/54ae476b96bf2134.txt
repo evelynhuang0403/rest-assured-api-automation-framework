@@ -1,0 +1,18 @@
+POST https://dummyjson.com/products/add
+
+Query parameters:
+(none)
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Content-Type: application/json
+
+Body:
+{
+  "title" : "Portfolio API Testing Backpack",
+  "description" : "A durable backpack used to demonstrate product creation assertions.",
+  "category" : "accessories",
+  "price" : 79.99,
+  "stock" : 25,
+  "brand" : "QA Gear"
+}

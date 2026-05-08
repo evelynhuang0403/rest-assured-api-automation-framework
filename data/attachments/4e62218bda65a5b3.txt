@@ -1,0 +1,12 @@
+GET https://dummyjson.com/auth/me
+
+Query parameters:
+(none)
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Authorization: [REDACTED]
+Content-Type: application/json
+
+Body:
+(none)

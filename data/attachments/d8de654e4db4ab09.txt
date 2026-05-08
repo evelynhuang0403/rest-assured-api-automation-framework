@@ -1,0 +1,18 @@
+PUT https://dummyjson.com/products/1
+
+Query parameters:
+(none)
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Content-Type: application/json
+
+Body:
+{
+  "title" : "Updated API Testing Backpack",
+  "description" : "Updated backpack used to demonstrate complete product update assertions.",
+  "category" : "travel",
+  "price" : 89.99,
+  "stock" : 30,
+  "brand" : "Updated QA Gear"
+}

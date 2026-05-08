@@ -1,0 +1,11 @@
+GET https://dummyjson.com/products/search?q=watch
+
+Query parameters:
+q: watch
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Content-Type: application/json
+
+Body:
+(none)

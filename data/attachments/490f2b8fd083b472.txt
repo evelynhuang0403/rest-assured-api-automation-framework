@@ -1,0 +1,14 @@
+POST https://dummyjson.com/auth/login
+
+Query parameters:
+(none)
+
+Headers:
+Accept: application/json, application/javascript, text/javascript, text/json
+Content-Type: application/json
+
+Body:
+{
+  "username" : "[REDACTED]",
+  "password" : "[REDACTED]"
+}

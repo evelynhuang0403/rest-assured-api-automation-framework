@@ -1,0 +1,30 @@
+Status: 404
+Response time: 145 ms
+
+Headers:
+CF-RAY: 9f850e4eee3b38a9-IAD
+Connection: keep-alive
+Content-Length: 46
+Content-Type: application/json; charset=utf-8
+Date: Fri, 08 May 2026 02:32:47 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=MomyZPQxQ%2F0H3%2F4MdOHEm8HZlo%2FAG0O3bCjGeNaTsBN66ZbUWhUNI2jXXAbrSTczpuixoYqz7gl3YgRX%2Bi9R45xj5FAosbO9NNTx8t2pxtSWgwOfqtRO3%2Bc86q2gKbRj"}]}
+Server: cloudflare
+access-control-allow-credentials: true
+cf-cache-status: DYNAMIC
+etag: W/"2e-EGfJjDrQEMw0kfZnasJ4eohvP/c"
+strict-transport-security: max-age=15552000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 95
+x-ratelimit-reset: 1778207568
+x-xss-protection: 1; mode=block
+
+Body:
+{
+    "message": "Cart with id '1000000' not found"
+}
