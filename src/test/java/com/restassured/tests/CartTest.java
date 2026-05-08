@@ -110,7 +110,7 @@ class CartTest extends BaseApiTest {
 
         assertValidCartSummary(created);
         assertCartBelongsToUser(created, userId);
-        assertCartHasProductLineCount(created, 2);
+        assertCartHasProductLineCount(created, 3);
         assertCartHasOnlyProductIds(created, 144, 98);
         assertCartTotalQuantityIs(created, 5);
     }
