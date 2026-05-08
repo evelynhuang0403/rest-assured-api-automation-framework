@@ -1,0 +1,99 @@
+name: RestAssured API Automation Report
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: api-automation-test-reporting-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-tests:
+    name: Run API Tests and Publish Allure Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Run API tests
+        shell: bash
+        run: |
+          set +e
+          mvn -B clean test
+          TEST_EXIT_CODE=$?
+          echo "TEST_EXIT_CODE=${TEST_EXIT_CODE}" >> "${GITHUB_ENV}"
+          exit 0
+
+      - name: Checkout previous Allure report history
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: previous-allure-report
+
+      - name: Restore Allure trend history
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          if [ -d previous-allure-report/history ]; then
+            mkdir -p target/allure-results/history
+            cp -R previous-allure-report/history/. target/allure-results/history/
+          fi
+
+      - name: Generate Allure HTML report
+        if: always()
+        run: mvn -B allure:report
+
+      - name: Upload Allure raw results
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: allure-z
+          path: target/allure-results
+          if-no-files-found: warn
+
+      - name: Upload Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
+          if-no-files-found: warn
+
+      - name: Upload Allure HTML report
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: allure-html-report
+          path: reports/allure-report
+          if-no-files-found: warn
+
+      - name: Publish Allure report to GitHub Pages
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: reports/allure-report
+
+      - name: Fail workflow when tests fail
+        if: always() && env.TEST_EXIT_CODE != '0'
+        run: exit "${TEST_EXIT_CODE:-1}"

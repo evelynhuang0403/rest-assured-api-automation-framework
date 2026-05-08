@@ -119,6 +119,27 @@ Allure output locations:
 
 The Allure report groups tests by API domain, story, severity, and tags. It also includes local execution metadata and redacted HTTP request/response evidence so failures can be investigated without exposing credentials, bearer tokens, or cookies.
 
+## CI/CD Reporting
+
+GitHub Actions runs the API suite on pushes to `main`, pull requests to `main`, and manual workflow dispatches.
+
+The CI workflow:
+
+- runs `mvn -B clean test`
+- generates the Allure HTML report even when tests fail
+- uploads raw Allure results, Surefire reports, and the HTML report as workflow artifacts
+- publishes the latest Allure report to the `gh-pages` branch after successful `main` branch workflow execution
+
+Pull request runs upload report artifacts only. They do not publish to GitHub Pages.
+
+Allure Trend is usually empty in local reports because `mvn clean` removes previous `target` history. In CI, the workflow restores the previous report's `history/` directory from the `gh-pages` branch before generating the next report, so trend charts become useful after at least two `main` branch runs.
+
+Generated report output remains ignored by Git:
+
+- `target/allure-results`
+- `reports/allure-report`
+- `.allure`
+
 ## Current Status
 
 The current MVP includes Products, Auth, Carts, and enterprise-style Allure reporting. The next planned portfolio enhancements are GitHub Actions CI and AI-assisted failure triage.

@@ -19,6 +19,11 @@ public final class AllureEnvironmentWriter {
     private static final String CATEGORIES_RESOURCE = "allure/categories.json";
     private static final String API_BASE_URL_PLACEHOLDER = "${api.baseUrl}";
     private static final String JAVA_VERSION_PLACEHOLDER = "${java.version}";
+    private static final String EXECUTION_ENVIRONMENT_PLACEHOLDER = "${execution.environment}";
+    private static final String GIT_BRANCH_PLACEHOLDER = "${git.branch}";
+    private static final String GIT_COMMIT_PLACEHOLDER = "${git.commit}";
+    private static final String GITHUB_RUN_NUMBER_PLACEHOLDER = "${github.runNumber}";
+    private static final String GITHUB_WORKFLOW_PLACEHOLDER = "${github.workflow}";
     private static final Path ALLURE_RESULTS_DIRECTORY = Path.of("target", "allure-results");
     private static final Path ENVIRONMENT_FILE = ALLURE_RESULTS_DIRECTORY.resolve("environment.properties");
     private static final Path CATEGORIES_FILE = ALLURE_RESULTS_DIRECTORY.resolve("categories.json");
@@ -46,13 +51,35 @@ public final class AllureEnvironmentWriter {
         String template = readClasspathResource(ENVIRONMENT_TEMPLATE_RESOURCE);
         String resolved = template
                 .replace(API_BASE_URL_PLACEHOLDER, ConfigManager.baseUrl())
-                .replace(JAVA_VERSION_PLACEHOLDER, System.getProperty("java.version"));
+                .replace(JAVA_VERSION_PLACEHOLDER, System.getProperty("java.version"))
+                .replace(EXECUTION_ENVIRONMENT_PLACEHOLDER, executionEnvironment())
+                .replace(GIT_BRANCH_PLACEHOLDER, firstNonBlank("local", env("GITHUB_HEAD_REF"), env("GITHUB_REF_NAME")))
+                .replace(GIT_COMMIT_PLACEHOLDER, firstNonBlank("local", env("GITHUB_SHA")))
+                .replace(GITHUB_RUN_NUMBER_PLACEHOLDER, firstNonBlank("local", env("GITHUB_RUN_NUMBER")))
+                .replace(GITHUB_WORKFLOW_PLACEHOLDER, firstNonBlank("local", env("GITHUB_WORKFLOW")));
 
         if (resolved.contains("${")) {
             throw new IllegalStateException("Unresolved placeholder found in " + ENVIRONMENT_TEMPLATE_RESOURCE);
         }
 
         return resolved;
+    }
+
+    private static String executionEnvironment() {
+        return "true".equalsIgnoreCase(env("GITHUB_ACTIONS")) ? "GitHub Actions" : "Local";
+    }
+
+    private static String env(String key) {
+        return System.getenv(key);
+    }
+
+    private static String firstNonBlank(String fallback, String... candidates) {
+        for (String candidate : candidates) {
+            if (candidate != null && !candidate.isBlank()) {
+                return candidate;
+            }
+        }
+        return fallback;
     }
 
     private static String readClasspathResource(String resourcePath) {
