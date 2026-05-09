@@ -127,13 +127,13 @@ The Allure report groups tests by API domain, story, severity, and tags. It also
 
 ## AI-Assisted Failure Triage
 
-The framework automatically generates failure triage when a test fails. It collects redacted REST Assured request/response evidence, JUnit failure metadata, and a stack trace excerpt, then attaches an `AI Failure Triage` markdown summary to the failed test in Allure.
+When a test fails, the framework collects redacted REST Assured request/response evidence, JUnit failure metadata, and a stack trace excerpt, then attaches an `AI Failure Triage` summary to the failed test in Allure.
 
-Live AI triage uses the OpenAI Responses API when `ai.triage.apiKey` is configured in the ignored local properties file. The model returns structured JSON, Java validates it into an `AiTriageSummary`, and the framework renders the final markdown itself for stable report formatting. If the key is missing, the model call fails, or the model returns invalid output, the framework attaches an `AI Failure Triage Unavailable` note with the reason instead of generating a rule-based substitute. AI triage failures never change the Maven test result; pass/fail status remains controlled by the API tests.
+Live triage uses the OpenAI Responses API when `ai.triage.apiKey` is configured. The model returns structured JSON, Java validates it, and the framework renders the final markdown so Allure and CI reports keep a consistent format. If the key is missing or the AI response is unavailable/invalid, the framework attaches an `AI Failure Triage Unavailable` note with the reason. AI triage never changes the Maven test result.
 
 Optional configuration:
 
-Use `src/test/resources/ai-triage.properties.template` as a copy-only template. The runtime config file is `src/test/resources/ai-triage.properties`, which is ignored by Git for local overrides:
+Copy `src/test/resources/ai-triage.properties.template` to `src/test/resources/ai-triage.properties`, which is ignored by Git:
 
 ```properties
 ai.triage.apiKey=
@@ -144,8 +144,7 @@ ai.triage.maxOutputTokens=3000
 ai.triage.reportDirectory=target/ai-triage
 ```
 
-For local live AI triage, put the OpenAI key in the ignored `ai.triage.apiKey` value. The Java framework reads this properties file directly and does not require an environment variable. For CI, store the key in GitHub Secrets as `OPENAI_API_KEY`; the workflow creates the ignored properties file during the run.
-If the local properties file is absent, the framework uses the same built-in defaults and marks AI triage unavailable when no API key is available.
+For local live AI triage, put the OpenAI key in `ai.triage.apiKey`. For CI, store the key in GitHub Secrets as `OPENAI_API_KEY`; the workflow creates the ignored properties file during the run. If no key is configured, test execution still works and failed tests receive an unavailable note instead of an AI-generated summary.
 
 Run the suite and generate the report:
 
@@ -168,7 +167,7 @@ AI triage output locations:
 - Aggregated markdown report: `target/ai-triage/failure-triage-report.md`
 - CI artifact: `ai-triage-reports`
 
-The report includes a defect title, category, expected result, actual result, suspected root cause, reproduction steps, recommended next debugging action, and confidence score.
+Each generated triage includes a defect title, category, expected vs. actual result, suspected root cause, reproduction steps, recommended next action, and confidence score.
 
 ## CI/CD Reporting
 
