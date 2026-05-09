@@ -1,0 +1,40 @@
+Status: 200
+Response time: 872 ms
+
+Headers:
+CF-RAY: 9f8d4b151ea052aa-SJC
+Connection: keep-alive
+Content-Encoding: gzip
+Content-Type: application/json; charset=utf-8
+Date: Sat, 09 May 2026 02:32:22 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=oc62KbCfrve4cT3U%2B%2BC7P7g8Ru4aFupLEyBcw19SG90Ynwt9GNewsATxCa%2FVUDSus0KHiE1pQhbaOlR1vO9VMxwt8p6fLh%2FHyaxyHjmW5w2JsPNiJED0WkOq75Vq7qDP"}]}
+Server: cloudflare
+Set-Cookie: [REDACTED]
+Transfer-Encoding: chunked
+access-control-allow-credentials: true
+cf-cache-status: DYNAMIC
+etag: W/"3a2-B1c/NtmKaZEvK44/ppNYcZLeZ7M"
+strict-transport-security: max-age=15552000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 99
+x-ratelimit-reset: 1778293952
+x-xss-protection: 1; mode=block
+
+Body:
+{
+    "accessToken": "[REDACTED]",
+    "refreshToken": "[REDACTED]",
+    "id": 1,
+    "username": "[REDACTED]",
+    "email": "emily.johnson@x.dummyjson.com",
+    "firstName": "Emily",
+    "lastName": "Johnson",
+    "gender": "female",
+    "image": "https://dummyjson.com/icon/[REDACTED]/128"
+}

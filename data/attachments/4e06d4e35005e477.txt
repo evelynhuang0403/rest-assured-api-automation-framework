@@ -1,0 +1,37 @@
+# Failure Triage Summary
+
+## Defect Title
+
+POST /carts/add returns incorrect product quantities (quantities appear swapped between products)
+
+## Category
+
+API behavior change
+
+## Expected Result
+
+The created cart in the 201 response should reflect the requested product quantities exactly (product id 144 => quantity 4, product id 98 => quantity 1).
+
+## Actual Result
+
+Response body shows product id 98 with quantity 4 and product id 144 with quantity 1, i.e. quantities do not match the request payload.
+
+## Suspected Root Cause
+
+Server-side bug in cart creation logic that mis-associates quantity values with product IDs (likely an index/order mapping error or incorrect binding between product id and quantity when assembling the response). The client request and response status (201) indicate the request was accepted, so this is likely a server mapping/regression rather than client or network error.
+
+## Reproduction Steps
+
+1. Send POST https://dummyjson.com/carts/add with Content-Type: application/json and body: { "userId":1, "products":[{"id":144,"quantity":4},{"id":98,"quantity":1}] }
+2. Verify response status is 201 and inspect response body products array for each product id's quantity.
+3. Repeat with unique quantities and more products (e.g., quantities 1,2,3) to detect pattern (whether quantities follow order, are shifted, or keyed by wrong index).
+4. Try reversing the order of products in the request to see if the same quantity values follow the order or the product ids (to determine whether ordering vs id-mapping is the issue).
+5. Provide request and response payloads and server-side request logs to the API/backend team to trace how quantities are bound to product ids during cart creation.
+
+## Recommended Next Debugging Action
+
+Open a defect with the backend/API team including the exact request and response payloads. Ask them to inspect the cart creation/mapping logic that pairs product ids to quantities (look for off-by-one, index reuse, or incorrect deserialization). Add targeted unit/integration tests to cover multiple products with distinct quantities and orders to prevent regressions. If this is a regression, consider reverting recent changes to cart mapping code until fixed.
+
+## Confidence Score
+
+90%

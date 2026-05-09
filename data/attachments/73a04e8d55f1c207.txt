@@ -1,0 +1,30 @@
+Status: 404
+Response time: 205 ms
+
+Headers:
+CF-RAY: 9f8d4b373f612994-SJC
+Connection: keep-alive
+Content-Length: 43
+Content-Type: application/json; charset=utf-8
+Date: Sat, 09 May 2026 02:32:28 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=F2V6AseoQLAfSchJIa0o5oEyCDV8rER7uiyTFkXHFc0BZ59BFMTD%2F%2F4eywd%2FtAMLdckZFiZy0BUPOF4UuBB7btWfu00xPbOenzcpcrVRBQoUrwgD1uPkkW9urQCpc89f"}]}
+Server: cloudflare
+access-control-allow-credentials: true
+cf-cache-status: DYNAMIC
+etag: W/"2b-IQyQdFvJMIROTqQVG2bK4ASsAqg"
+strict-transport-security: max-age=15552000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 98
+x-ratelimit-reset: 1778293952
+x-xss-protection: 1; mode=block
+
+Body:
+{
+    "message": "Product with id '0' not found"
+}

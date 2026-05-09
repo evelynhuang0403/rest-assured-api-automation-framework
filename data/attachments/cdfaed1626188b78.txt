@@ -1,0 +1,30 @@
+Status: 400
+Response time: 239 ms
+
+Headers:
+CF-RAY: 9f8d4b229cfbed39-SJC
+Connection: keep-alive
+Content-Length: 33
+Content-Type: application/json; charset=utf-8
+Date: Sat, 09 May 2026 02:32:24 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=VGHZMfZubYeHZ9cllbR6b7daZNEYA4qUw57UBv4BwuWMHGDhErCJMWGRvPSLVbMBiS7ZBKX0jVM4HyPGYCZggccGCqVJ40I8x0rGuwxMpXVB%2FQe6OvQEygompfndhv3E"}]}
+Server: cloudflare
+access-control-allow-credentials: true
+cf-cache-status: DYNAMIC
+etag: W/"21-dBEoW0UmTF+EGUMaprEp9/8zNNA"
+strict-transport-security: max-age=15552000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 98
+x-ratelimit-reset: 1778293952
+x-xss-protection: 1; mode=block
+
+Body:
+{
+    "message": "Invalid credentials"
+}
