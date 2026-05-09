@@ -1,0 +1,57 @@
+Status: 201
+Response time: 135 ms
+
+Headers:
+CF-RAY: 9f8d3fe3badd25cc-IAD
+Connection: keep-alive
+Content-Length: 585
+Content-Type: application/json; charset=utf-8
+Date: Sat, 09 May 2026 02:24:44 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=lVJx5r2OlTvhbjSdo2CHtyTL9wZg6KTf81VA8qjmWWORxAuHuW66g4cgd0oPiNuCoBuGv6vuUBHdAIQItTul1X4Tpsz9MIbz6JkxO4k2lAg5TucNHR7orlIwGj6%2Fiv0a"}]}
+Server: cloudflare
+access-control-allow-credentials: true
+cf-cache-status: DYNAMIC
+etag: W/"249-HKFpkwTyDA1bmpTQtCbyMb7/4e8"
+strict-transport-security: max-age=15552000; includeSubDomains
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-ratelimit-limit: 100
+x-ratelimit-remaining: 98
+x-ratelimit-reset: 1778293492
+x-xss-protection: 1; mode=block
+
+Body:
+{
+    "id": 209,
+    "products": [
+        {
+            "id": 98,
+            "title": "Rolex Submariner Watch",
+            "price": 13999.99,
+            "quantity": 4,
+            "total": 55999.96,
+            "discountPercentage": 5.05,
+            "discountedPrice": 53172,
+            "thumbnail": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/thumbnail.webp"
+        },
+        {
+            "id": 144,
+            "title": "Cricket Helmet",
+            "price": 44.99,
+            "quantity": 1,
+            "total": 44.99,
+            "discountPercentage": 9.64,
+            "discountedPrice": 41,
+            "thumbnail": "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/thumbnail.webp"
+        }
+    ],
+    "total": 56044.95,
+    "discountedTotal": 53213,
+    "userId": 1,
+    "totalProducts": 2,
+    "totalQuantity": 5
+}
