@@ -1,0 +1,8 @@
+# Local AI triage configuration template.
+
+ai.triage.apiKey=YOUR_API_KEY_HERE
+ai.triage.model=gpt-5-mini
+ai.triage.timeout.seconds=45
+ai.triage.maxRetries=1
+ai.triage.maxOutputTokens=3000
+ai.triage.reportDirectory=target/ai-triage

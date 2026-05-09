@@ -32,6 +32,20 @@ jobs:
           java-version: '17'
           cache: maven
 
+      - name: Create AI triage config from GitHub Secrets
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "${OPENAI_API_KEY}" ]; then
+            echo "OPENAI_API_KEY secret is not configured; AI triage will be unavailable."
+            exit 0
+          fi
+
+          cat > src/test/resources/ai-triage.properties <<EOF
+          ai.triage.apiKey=${OPENAI_API_KEY}
+          EOF
+
       - name: Run API tests
         shell: bash
         run: |
@@ -77,6 +91,14 @@ jobs:
           name: surefire-reports
           path: target/surefire-reports
           if-no-files-found: warn
+
+      - name: Upload AI triage reports
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ai-triage-reports
+          path: target/ai-triage
+          if-no-files-found: ignore
 
       - name: Upload Allure HTML report
         if: always()

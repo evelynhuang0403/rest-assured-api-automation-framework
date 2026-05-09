@@ -1,5 +1,7 @@
 package com.restassured.utils.reporting;
 
+import com.ai.context.TriageEvidenceContext;
+import com.ai.model.ApiInteraction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restassured.utils.ConfigManager;
@@ -61,20 +63,91 @@ public class AllureApiLoggingFilter implements Filter {
             FilterableResponseSpecification responseSpec,
             FilterContext context
     ) {
-        String requestAttachment = buildRequestAttachment(requestSpec);
-        Response response = context.next(requestSpec, responseSpec);
-        String responseAttachment = buildResponseAttachment(response);
+        RequestEvidence requestEvidence = captureRequest(requestSpec);
+        ResponseEvidence responseEvidence;
 
-        Allure.addAttachment("HTTP Request", "text/plain", requestAttachment, ".txt");
-        Allure.addAttachment("HTTP Response", "text/plain", responseAttachment, ".txt");
+        try {
+            Response response = context.next(requestSpec, responseSpec);
+            responseEvidence = captureResponse(response);
+            publishEvidence(requestEvidence, responseEvidence);
+            return response;
+        } catch (RuntimeException exception) {
+            responseEvidence = failedResponse(exception);
+            publishEvidence(requestEvidence, responseEvidence);
+            throw exception;
+        }
+    }
 
-        return response;
+    /**
+     * Captures and redacts request details before REST Assured sends the HTTP call.
+     */
+    private static RequestEvidence captureRequest(FilterableRequestSpecification requestSpec) {
+        String method = requestSpec.getMethod();
+        String uri = redact(requestSpec.getURI());
+        String queryParameters = formatMap(requestSpec.getQueryParams());
+        String headers = formatMap(requestSpec.getHeaders().asList().stream()
+                .collect(TreeMap::new, (map, header) -> map.put(header.getName(), header.getValue()), TreeMap::putAll));
+        String body = redact(bodyAsString(requestSpec.getBody()));
+        String attachment = buildRequestAttachment(method, uri, queryParameters, headers, body);
+
+        return new RequestEvidence(method, uri, queryParameters, headers, body, attachment);
+    }
+
+    /**
+     * Captures and redacts response details after REST Assured receives the HTTP response.
+     */
+    private static ResponseEvidence captureResponse(Response response) {
+        int responseStatus = response.getStatusCode();
+        long responseTimeMs = response.getTimeIn(TimeUnit.MILLISECONDS);
+        String responseHeaders = formatMap(response.getHeaders().asList().stream()
+                .collect(TreeMap::new, (map, header) -> map.put(header.getName(), header.getValue()), TreeMap::putAll));
+        String responseBody = redact(responseBody(response));
+        String responseAttachment = buildResponseAttachment(responseStatus, responseTimeMs, responseHeaders, responseBody);
+
+        return new ResponseEvidence(responseStatus, responseTimeMs, responseHeaders, responseBody, responseAttachment);
+    }
+
+    /**
+     * Builds synthetic response evidence when the request fails before a server response is available.
+     */
+    private static ResponseEvidence failedResponse(RuntimeException exception) {
+        String responseBody = "Request failed before an HTTP response was received: " + redact(exception.getMessage());
+        String responseAttachment = buildResponseAttachment(0, 0, "(none)", responseBody);
+
+        return new ResponseEvidence(0, 0, "(none)", responseBody, responseAttachment);
+    }
+
+    /**
+     * Publishes the same sanitized evidence to Allure and the AI triage context.
+     */
+    private static void publishEvidence(RequestEvidence requestEvidence, ResponseEvidence responseEvidence) {
+        Allure.addAttachment("HTTP Request", "text/plain", requestEvidence.attachment(), ".txt");
+        Allure.addAttachment("HTTP Response", "text/plain", responseEvidence.attachment(), ".txt");
+        TriageEvidenceContext.record(new ApiInteraction(
+                requestEvidence.method(),
+                requestEvidence.uri(),
+                requestEvidence.queryParameters(),
+                requestEvidence.headers(),
+                requestEvidence.body(),
+                responseEvidence.status(),
+                responseEvidence.timeMs(),
+                responseEvidence.headers(),
+                responseEvidence.body(),
+                requestEvidence.attachment(),
+                responseEvidence.attachment()
+        ));
     }
 
     /**
      * Formats the outbound request into a readable text attachment for Allure.
      */
-    private static String buildRequestAttachment(FilterableRequestSpecification requestSpec) {
+    private static String buildRequestAttachment(
+            String method,
+            String uri,
+            String queryParameters,
+            String requestHeaders,
+            String requestBody
+    ) {
         return """
                 %s %s
 
@@ -87,19 +160,23 @@ public class AllureApiLoggingFilter implements Filter {
                 Body:
                 %s
                 """.formatted(
-                requestSpec.getMethod(),
-                redact(requestSpec.getURI()),
-                formatMap(requestSpec.getQueryParams()),
-                formatMap(requestSpec.getHeaders().asList().stream()
-                        .collect(TreeMap::new, (map, header) -> map.put(header.getName(), header.getValue()), TreeMap::putAll)),
-                redact(bodyAsString(requestSpec.getBody()))
+                method,
+                uri,
+                queryParameters,
+                requestHeaders,
+                requestBody
         );
     }
 
     /**
      * Formats the inbound response into a readable text attachment for Allure.
      */
-    private static String buildResponseAttachment(Response response) {
+    private static String buildResponseAttachment(
+            int responseStatus,
+            long responseTimeMs,
+            String responseHeaders,
+            String responseBody
+    ) {
         return """
                 Status: %d
                 Response time: %d ms
@@ -110,11 +187,10 @@ public class AllureApiLoggingFilter implements Filter {
                 Body:
                 %s
                 """.formatted(
-                response.getStatusCode(),
-                response.getTimeIn(TimeUnit.MILLISECONDS),
-                formatMap(response.getHeaders().asList().stream()
-                        .collect(TreeMap::new, (map, header) -> map.put(header.getName(), header.getValue()), TreeMap::putAll)),
-                redact(responseBody(response))
+                responseStatus,
+                responseTimeMs,
+                responseHeaders,
+                responseBody
         );
     }
 
@@ -204,5 +280,24 @@ public class AllureApiLoggingFilter implements Filter {
             return value;
         }
         return value.replace(sensitiveValue, MASK);
+    }
+
+    private record RequestEvidence(
+            String method,
+            String uri,
+            String queryParameters,
+            String headers,
+            String body,
+            String attachment
+    ) {
+    }
+
+    private record ResponseEvidence(
+            int status,
+            long timeMs,
+            String headers,
+            String body,
+            String attachment
+    ) {
     }
 }

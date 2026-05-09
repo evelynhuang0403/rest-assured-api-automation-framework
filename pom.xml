@@ -18,6 +18,7 @@
         <allure.version>2.34.0</allure.version>
         <allure.maven.version>2.17.0</allure.maven.version>
         <aspectj.version>1.9.25.1</aspectj.version>
+        <openai.java.version>4.32.0</openai.java.version>
     </properties>
 
     <dependencyManagement>
@@ -33,6 +34,12 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+            <version>${openai.java.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>

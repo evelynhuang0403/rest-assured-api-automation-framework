@@ -28,6 +28,9 @@ public final class AllureEnvironmentWriter {
     private static final Path ENVIRONMENT_FILE = ALLURE_RESULTS_DIRECTORY.resolve("environment.properties");
     private static final Path CATEGORIES_FILE = ALLURE_RESULTS_DIRECTORY.resolve("categories.json");
 
+    /**
+     * Prevents instantiation because this class only exposes static report metadata utilities.
+     */
     private AllureEnvironmentWriter() {
     }
 
@@ -46,6 +49,8 @@ public final class AllureEnvironmentWriter {
 
     /**
      * Resolves runtime placeholders in the environment metadata template.
+     *
+     * @return complete Allure environment metadata with all placeholders replaced
      */
     private static String resolvedEnvironmentMetadata() {
         String template = readClasspathResource(ENVIRONMENT_TEMPLATE_RESOURCE);
@@ -65,14 +70,32 @@ public final class AllureEnvironmentWriter {
         return resolved;
     }
 
+    /**
+     * Determines whether the current test run is local or running inside GitHub Actions.
+     *
+     * @return human-readable execution environment name for Allure metadata
+     */
     private static String executionEnvironment() {
         return "true".equalsIgnoreCase(env("GITHUB_ACTIONS")) ? "GitHub Actions" : "Local";
     }
 
+    /**
+     * Reads one environment variable used to populate Allure metadata.
+     *
+     * @param key environment variable name
+     * @return environment variable value, or null when not defined
+     */
     private static String env(String key) {
         return System.getenv(key);
     }
 
+    /**
+     * Returns the first nonblank candidate, with a fallback when all candidates are missing.
+     *
+     * @param fallback value to return when no candidate is usable
+     * @param candidates ordered values to inspect
+     * @return first nonblank candidate or fallback
+     */
     private static String firstNonBlank(String fallback, String... candidates) {
         for (String candidate : candidates) {
             if (candidate != null && !candidate.isBlank()) {
@@ -82,6 +105,12 @@ public final class AllureEnvironmentWriter {
         return fallback;
     }
 
+    /**
+     * Reads a classpath text resource used by Allure reporting.
+     *
+     * @param resourcePath classpath location of the resource
+     * @return resource content as UTF-8 text
+     */
     private static String readClasspathResource(String resourcePath) {
         try (InputStream inputStream = resourceStream(resourcePath)) {
             return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
@@ -90,12 +119,25 @@ public final class AllureEnvironmentWriter {
         }
     }
 
+    /**
+     * Copies a classpath resource into the Allure results directory.
+     *
+     * @param resourcePath classpath location of the source resource
+     * @param outputPath destination path under the generated Allure results
+     * @throws IOException when the resource cannot be copied
+     */
     private static void copyClasspathResource(String resourcePath, Path outputPath) throws IOException {
         try (InputStream inputStream = resourceStream(resourcePath)) {
             Files.copy(inputStream, outputPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
+    /**
+     * Opens a required Allure metadata resource from the test classpath.
+     *
+     * @param resourcePath classpath location of the required resource
+     * @return input stream for the resource
+     */
     private static InputStream resourceStream(String resourcePath) {
         InputStream inputStream = AllureEnvironmentWriter.class.getClassLoader().getResourceAsStream(resourcePath);
         if (inputStream == null) {

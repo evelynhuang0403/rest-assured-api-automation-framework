@@ -17,6 +17,7 @@ The framework targets [DummyJSON](https://dummyjson.com/docs), a public API with
 - JSON schema validation for product, cart, auth, and error contracts
 - Logback-backed request, response, and test execution logging
 - Allure reporting with domain labels, severity, execution metadata, and redacted HTTP evidence
+- Automatic AI-assisted failure triage with Allure attachments and CI artifacts
 
 ## Test Coverage
 
@@ -47,23 +48,28 @@ The framework targets [DummyJSON](https://dummyjson.com/docs), a public API with
 ## Project Structure
 
 ```text
-src/test/java/com/restassured
-├── api/
-│   ├── clients/          Reusable API clients for Auth, Products, and Carts
-│   └── specs/            REST Assured request and response specifications
-├── constants/            Endpoint, schema, and test data path constants
-├── models/
-│   ├── request/          Request POJOs for non-trivial payloads
-│   ├── response/         Response POJOs used by assertions and flows
-│   └── testdata/         POJOs for external JSON test data
-├── tests/                JUnit 5 API test classes
-│   └── assertions/       Domain-specific assertion helpers
-└── utils/                Config, JSON data reading, properties, and logging
+src/test/java
+├── com/ai/               AI-assisted failure triage support
+│   ├── client/           OpenAI Responses API client wrapper
+│   ├── config/           AI triage configuration reader
+│   ├── context/          Per-test evidence capture context
+│   ├── model/            Triage evidence and result records
+│   └── service/          Triage orchestration and markdown rendering
+└── com/restassured
+    ├── api/
+    │   ├── clients/      Reusable API clients for Auth, Products, and Carts
+    │   └── specs/        REST Assured request and response specifications
+    ├── constants/        Endpoint, schema, and test data path constants
+    ├── models/           Request, response, and test data POJOs
+    ├── tests/            JUnit 5 API test classes
+    └── utils/            Config, JSON data reading, properties, and logging
 
 src/test/resources
 ├── allure/               Allure environment and category metadata templates
 ├── schemas/              JSON schema contracts
 ├── testdata/             External JSON test data
+├── ai-triage.properties.template
+│                         Safe AI triage defaults and local API key placeholder
 ├── logback-test.xml      Test logging configuration
 └── test-config.properties
 ```
@@ -119,6 +125,51 @@ Allure output locations:
 
 The Allure report groups tests by API domain, story, severity, and tags. It also includes local execution metadata and redacted HTTP request/response evidence so failures can be investigated without exposing credentials, bearer tokens, or cookies.
 
+## AI-Assisted Failure Triage
+
+The framework automatically generates failure triage when a test fails. It collects redacted REST Assured request/response evidence, JUnit failure metadata, and a stack trace excerpt, then attaches an `AI Failure Triage` markdown summary to the failed test in Allure.
+
+Live AI triage uses the OpenAI Responses API when `ai.triage.apiKey` is configured in the ignored local properties file. The model returns structured JSON, Java validates it into an `AiTriageSummary`, and the framework renders the final markdown itself for stable report formatting. If the key is missing, the model call fails, or the model returns invalid output, the framework attaches an `AI Failure Triage Unavailable` note with the reason instead of generating a rule-based substitute. AI triage failures never change the Maven test result; pass/fail status remains controlled by the API tests.
+
+Optional configuration:
+
+Use `src/test/resources/ai-triage.properties.template` as a copy-only template. The runtime config file is `src/test/resources/ai-triage.properties`, which is ignored by Git for local overrides:
+
+```properties
+ai.triage.apiKey=
+ai.triage.model=gpt-5-mini
+ai.triage.timeout.seconds=45
+ai.triage.maxRetries=1
+ai.triage.maxOutputTokens=3000
+ai.triage.reportDirectory=target/ai-triage
+```
+
+For local live AI triage, put the OpenAI key in the ignored `ai.triage.apiKey` value. The Java framework reads this properties file directly and does not require an environment variable. For CI, store the key in GitHub Secrets as `OPENAI_API_KEY`; the workflow creates the ignored properties file during the run.
+If the local properties file is absent, the framework uses the same built-in defaults and marks AI triage unavailable when no API key is available.
+
+Run the suite and generate the report:
+
+```bash
+mvn clean test
+mvn allure:report
+open reports/allure-report/index.html
+```
+
+When a test fails, review these Allure attachments:
+
+- `Failure Summary`
+- `HTTP Request`
+- `HTTP Response`
+- `AI Failure Triage`
+
+AI triage output locations:
+
+- Per-failure markdown files: `target/ai-triage`
+- Aggregated markdown report: `target/ai-triage/failure-triage-report.md`
+- CI artifact: `ai-triage-reports`
+
+The report includes a defect title, category, expected result, actual result, suspected root cause, reproduction steps, recommended next debugging action, and confidence score.
+
 ## CI/CD Reporting
 
 GitHub Actions runs the API suite on pushes to `main`, pull requests to `main`, and manual workflow dispatches.
@@ -127,7 +178,7 @@ The CI workflow:
 
 - runs `mvn -B clean test`
 - generates the Allure HTML report even when tests fail
-- uploads raw Allure results, Surefire reports, and the HTML report as workflow artifacts
+- uploads raw Allure results, Surefire reports, AI triage reports, and the HTML report as workflow artifacts
 - publishes the latest Allure report to the `gh-pages` branch after successful `main` branch workflow execution
 
 Pull request runs upload report artifacts only. They do not publish to GitHub Pages.
@@ -139,7 +190,3 @@ Generated report output remains ignored by Git:
 - `target/allure-results`
 - `reports/allure-report`
 - `.allure`
-
-## Current Status
-
-The current MVP includes Products, Auth, Carts, and enterprise-style Allure reporting. The next planned portfolio enhancements are GitHub Actions CI and AI-assisted failure triage.

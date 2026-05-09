@@ -6,3 +6,4 @@ reports/
 .DS_Store
 *.log
 AGENTS.md
+src/test/resources/ai-triage.properties
